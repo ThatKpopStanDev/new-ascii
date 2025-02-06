@@ -38,9 +38,10 @@ The script will process the video and display it in ASCII art format in your ter
 
 
 # Troubleshooting
-* Ensure `ffmpeg` is correctly installed and added to your system's PATH
+* Ensure `ffmpeg` is correctly installed and added to your system's PATH.
+* Ensure the name is correct with the name on the videos folder.
 
 # Goals
 
-* Make it a terminal script without making the people download or install dependencies
-* Stream the video directly from youtube instead of having it in a folder
+* Make it a terminal script without making the people download or install dependencies.
+* Stream the video directly from youtube instead of having it in a folder.
