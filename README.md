@@ -27,21 +27,24 @@ Also, make sure you have ffmpeg installed. You can download it from in [ffmpeg](
 ## Usage
 
 * Clone the repository or download the script.
+* Create a virtual env to install the dependencies `python | python3 | py -m venv venv` (recommended)
+* Activate the virtual env 
+    - `source venv/bin | Scripts/activate` for linux or ubuntu
+    - `venv\Scripts\activate.bat` for cmd and `venv\Scripts\Activate.ps1` for Powershell
 * Install the [dependencies](#requirements) (you can try and use WSL it works pretty well to install the dependencies)
 * Place the video you want to conver to ASCII in the `./videos/` directory
 * Run the script with the followin command, providing the name of the video (without the `.webm` extension. right now only works with webm because is the initialization of the project, you can try with the video that comes in the github) 
 `python3 | python | py new_ascii.py [name of the video]`  
-## Name problems
+### Name problems
 * if the name has whitespaces please use _ on the name  
 * if you want to use an example run this command `python3 | python | py new_ascii.py ditto`
 The script will process the video and display it in ASCII art format in your terminal.
 
 
 # Troubleshooting
-* Ensure `ffmpeg` is correctly installed and added to your system's PATH.
-* Ensure the name is correct with the name on the videos folder.
+* Ensure `ffmpeg` is correctly installed and added to your system's PATH
 
 # Goals
 
-* Make it a terminal script without making the people download or install dependencies.
-* Stream the video directly from youtube instead of having it in a folder.
+* Make it a terminal script without making the people download or install dependencies
+* Stream the video directly from youtube instead of having it in a folder
