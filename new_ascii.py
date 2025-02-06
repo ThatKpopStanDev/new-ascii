@@ -21,7 +21,6 @@ def resize_image(image, new_width):
     orig_width, orig_height = image.size
     ratio = orig_height / orig_width
     new_height = int(new_width * ratio * 0.55)
-    print(new_height)
     return image.resize((new_width, new_height))
 
 
