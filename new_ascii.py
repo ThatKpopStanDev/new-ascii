@@ -47,8 +47,7 @@ def image_to_ascii(image, terminal_width, max_width=width ):
     return pixels_to_ascii(image)
 
 
-ASCII_CHARS = list(
-    "@#%WM&8B$O0QbdpqwmZOQLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,\"^`'. ")
+ASCII_CHARS = ["@"]
 
 
 
@@ -84,23 +83,21 @@ try:
             (frame_height, frame_width, 3))
         image = Image.fromarray(frame_np)
 
-        frame_np = np.frombuffer(frame, np.uint8).reshape(
-            (frame_height, frame_width, 3))
-        image = Image.fromarray(frame_np)
         terminal_width, terminal_height = shutil.get_terminal_size()
         ascii_frame = image_to_ascii(image, terminal_width)
 
         sys.stdout.write("\033[H")
         sys.stdout.write(ascii_frame)
 
-        if (last_height != terminal_height):
+        if ((last_height != terminal_height ) | (last_width != terminal_width)):
             last_height = terminal_height
-            sys.stdout.write("\033c")
-        if (last_width != terminal_width):
             last_width = terminal_width
             sys.stdout.write("\033c")
+  
+         
 
-        time.sleep(0.05)
+        time.sleep(0.057)
+    os.system('cls||clear')
 except AttributeError:
     print("Hey insert something, don't expect the code to work for you like I did with ChatGPT")
 except IndexError:
