@@ -47,9 +47,7 @@ def image_to_ascii(frame):
     return pixels_to_ascii_colored(frame)
 
 
-def clear_screen():
-    sys.stdout.write("\033[H\033[J")
-    sys.stdout.flush()
+
 
 
 try:
@@ -93,11 +91,11 @@ try:
         image = Image.fromarray(frame_np)
         ascii_frame = image_to_ascii(image)
 
-        clear_screen()
+   
         sys.stdout.write(ascii_frame)
-
         time.sleep(0.07)
-
+        sys.stdout.write("\033[H\033[J")
+       
     process.stdout.close()
     process.stderr.close()
     os.system('cls||clear')
