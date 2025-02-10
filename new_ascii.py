@@ -1,11 +1,14 @@
-import shutil
 import subprocess
 import sys
 from PIL import Image
 import time
 import os
 import numpy as np
+import http.server
+import socketserver
+import time
 
+import urllib
 
 width = 95
 height = 70
@@ -34,7 +37,7 @@ def get_youtube_stream_url(video_url):
         sys.exit(1)
 
 
-def process_video_with_ffmpeg(stream_url):
+def process_video_with_ffmpeg(stream_url, width_parameter):
     frame_width, frame_height = 160, 90
     frame_size = frame_width * frame_height * 3
 
@@ -52,7 +55,6 @@ def process_video_with_ffmpeg(stream_url):
         ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=10**8
     )
 
-    last_height, last_width = 0, 0
 
     while True:
         frame = process.stdout.read(frame_size)
@@ -62,18 +64,12 @@ def process_video_with_ffmpeg(stream_url):
             (frame_height, frame_width, 3))
         image = Image.fromarray(frame_np)
 
-        terminal_width, terminal_height = shutil.get_terminal_size()
-        ascii_frame = image_to_ascii(image, terminal_width)
 
-        sys.stdout.write("\033[H")
-        sys.stdout.write(ascii_frame)
+        ascii_frame = image_to_ascii(image,terminal_width=width_parameter)
 
-        if (last_height != terminal_height) or (last_width != terminal_width):
-            last_height = terminal_height
-            last_width = terminal_width
-            sys.stdout.write("\033c")
+        yield ascii_frame 
 
-        time.sleep(0.057)
+        time.sleep(0.055)
 
 
 def resize_image(image, new_width):
@@ -107,22 +103,65 @@ def image_to_ascii(image, terminal_width, max_width=width):
     return pixels_to_ascii(image)
 
 
-try:
-    if len(sys.argv) < 2:
-        raise AttributeError(
-            "Hey, inserta algo, no esperes que haga todo por ti.")
-    yt_id = dictSongs.get(sys.argv[1])
-    if not yt_id:
-        raise ValueError("Video no encontrado en la lista.")
-    video_url = f"https://www.youtube.com/watch?v={yt_id}"
-    stream_url = get_youtube_stream_url(video_url)
-    process_video_with_ffmpeg(stream_url)
-except AttributeError:
 
-    print("Hey insert something, don't expect the code to work for you like I did with ChatGPT")
-except IndexError:
-    print("Damn i fucked up")
-except ValueError:
-    print("Please enter a valid option... you have the GitHub right there to check...")
-except KeyboardInterrupt:
-    os.system('cls||clear')
+
+
+class AsciiServer(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+            parsed_path = urllib.parse.urlsplit(self.path)
+            query = urllib.parse.parse_qs(parsed_path.query)
+
+            query_values = query.get("song", [])
+            size_values = query.get("size", [])
+            print(query_values)
+            print(size_values)
+
+            if len(query_values) == 0 or len(size_values) == 0:
+                self.send_response(400)
+                self.send_header("Content-type", "text/plain")
+                self.end_headers()
+                self.wfile.write("Error: Missing song or size parameter.\n".encode())
+                return
+            song_name = query_values[0]
+            terminal_size = int(size_values[0])
+            yt_id = dictSongs.get(query_values[0])
+            if not yt_id:
+                self.send_response(404)
+                self.send_header("Content-type", "text/plain")
+                self.end_headers()
+                self.wfile.write(f"Error: Song '{song_name}' not found.\n".encode())
+                return
+            video_url = f"https://www.youtube.com/watch?v={yt_id}"
+            stream_url = get_youtube_stream_url(video_url)
+            try:
+                self.send_response(200)
+                self.send_header("Content-type", "text/plain")
+                self.end_headers()  
+                self.wfile.flush()
+                for frame in process_video_with_ffmpeg(stream_url,terminal_size):
+                    self.wfile.write(frame.encode())
+                    self.wfile.write(b"\033[H")
+                    self.wfile.flush()
+            
+            except Exception as e:
+                self.send_response(500)
+                self.send_header("Content-type", "text/plain")
+                self.end_headers()
+                self.wfile.write(f"Error: {str(e)}\n".encode())     
+
+
+
+PORT = 8080
+def run_server():
+    PORT = 8080
+    with socketserver.TCPServer(("", PORT), AsciiServer) as httpd:
+        print(f"Servidor HTTP corriendo en el puerto {PORT}")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\nInterrupción recibida, limpiando y cerrando el servidor.")
+            
+            sys.exit(0)
+
+if __name__ == "__main__":
+    run_server()
