@@ -38,3 +38,4 @@ The script will process the video and display it in ASCII art format in your ter
 - [x]  Make it a terminal script without requiring users to download or install dependencies  
 - [x]  Stream the video directly from YouTube instead of using local files  
 - [ ]  Host it online to avoid needing to download the repository  
+- [ ]  Better way to select videos
