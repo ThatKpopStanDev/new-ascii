@@ -20,6 +20,8 @@ To install the required python libraries:
 
 `docker build -t [name you want for the image] .`
 
+Please run the command on the same folder as the project
+
 ## Usage
 
 * Clone the repository or download the script.
