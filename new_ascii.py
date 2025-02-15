@@ -14,9 +14,15 @@ width = 95
 height = 70
 dictSongs = {"ditto": "Km71Rr9K-Bw",
              "eta": "s4Ow55AbdCg", "hype_boy2": "S4UEJePR0UE", "hype_boy_mv": "11cta61wi0g", "how_sweet": "Q3K0TOvTOno"}
+
+
 def clear_console():
     os.system("clear" if os.name != "nt" else "cls")
+
+
 CLEAR_SCREEN = "\033[H\033[J"
+
+
 def get_youtube_stream_url(video_url):
     try:
 
@@ -126,23 +132,22 @@ class AsciiServer(http.server.BaseHTTPRequestHandler):
             self.wfile.write(
                 f"Error: Song '{song_name}' not found.\n".encode())
             return
-        
+
         video_url = f"https://www.youtube.com/watch?v={yt_id}"
         stream_url = get_youtube_stream_url(video_url)
-        
+
         try:
             self.send_response(200)
             self.send_header("Content-type", "text/plain")
             self.end_headers()
 
-     
             self.wfile.write(CLEAR_SCREEN.encode())
             self.wfile.flush()
 
             for frame in process_video_with_ffmpeg(stream_url, terminal_size):
                 try:
                     self.wfile.write(frame.encode())
-                    self.wfile.write(b"\033[H") 
+                    self.wfile.write(b"\033[H")
                     self.wfile.flush()
                 except BrokenPipeError:
                     print("Error: Broken pipe, cliente desconectado.")
@@ -157,7 +162,7 @@ class AsciiServer(http.server.BaseHTTPRequestHandler):
 
         except BrokenPipeError:
             print("Cliente desconectado antes de recibir todos los datos.")
-            self.wfile.write(CLEAR_SCREEN.encode()) 
+            self.wfile.write(CLEAR_SCREEN.encode())
             self.wfile.flush()
         except Exception as e:
             self.send_response(500)
@@ -168,7 +173,9 @@ class AsciiServer(http.server.BaseHTTPRequestHandler):
             self.wfile.write(CLEAR_SCREEN.encode())
             self.wfile.flush()
 
+
 PORT = 8080
+
 
 def run_server():
     PORT = 8080
@@ -178,8 +185,9 @@ def run_server():
             httpd.serve_forever()
         except KeyboardInterrupt:
             print("\nInterrupción recibida, limpiando y cerrando el servidor.")
-            clear_console() 
+            clear_console()
             sys.exit(0)
+
 
 if __name__ == "__main__":
     run_server()
