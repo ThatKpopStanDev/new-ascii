@@ -5,7 +5,7 @@ from PIL import Image
 import time
 import os
 import numpy as np
-
+import platform
 
 width = 95
 height = 70
@@ -125,4 +125,8 @@ except IndexError:
 except ValueError:
     print("Please enter a valid option... you have the GitHub right there to check...")
 except KeyboardInterrupt:
-    os.system('cls||clear')
+    if(platform.uname().system.lower()=="linux"):
+        os.system('clear')
+    else:
+        os.system('cls')
+
