@@ -13,38 +13,26 @@ This script allows to visualize the new jeans mvs in the terminal using ASCII ar
 ## Requirements
 
 Make sure you have the following dependencies installed:
-* Python 3.x.
-* `ffmpeg` (installed on your system).
-* `Pillow` library (for image manipulation).
-* `numpy` library.
+* Docker Desktop 
+* WSL (optional but runs better and faste i don't know why)
 
 To install the required python libraries: 
 
-`pip install pillow numpy` or `pip install -r requirements.txt`
-
-Also, make sure you have ffmpeg installed. You can download it from in [ffmpeg](https://www.ffmpeg.org/download.html) official site.
+`docker build -t [name you want for the image] .`
 
 ## Usage
 
 * Clone the repository or download the script.
-* Create a virtual env to install the dependencies `python | python3 | py -m venv venv` (recommended)
-* Activate the virtual env 
-    - `source venv/bin | Scripts/activate` for linux or ubuntu
-    - `venv\Scripts\activate.bat` for cmd and `venv\Scripts\Activate.ps1` for Powershell
-* Install the [dependencies](#requirements) (you can try and use WSL it works pretty well to install the dependencies)
-* Place the video you want to conver to ASCII in the `./videos/` directory
-* Run the script with the followin command, providing the name of the video (without the `.webm` extension. right now only works with webm because is the initialization of the project, you can try with the video that comes in the github) 
-`python3 | python | py new_ascii.py [name of the video]`  
+* Run the build `docker build -t [name you want for the image] .`
+* Run the code `docker run -it [name you selected for the image or id of the docker image]`
+
 ### Name problems
 * if the name has whitespaces please use _ on the name  
 * if you want to use an example run this command `python3 | python | py new_ascii.py ditto`
 The script will process the video and display it in ASCII art format in your terminal.
 
-
-# Troubleshooting
-* Ensure `ffmpeg` is correctly installed and added to your system's PATH
-
 # Goals
 
-* Make it a terminal script without making the people download or install dependencies
-* Stream the video directly from youtube instead of having it in a folder
+- [x]  Make it a terminal script without requiring users to download or install dependencies  
+- [x]  Stream the video directly from YouTube instead of using local files  
+- [ ]  Host it online to avoid needing to download the repository  
